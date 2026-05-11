@@ -1,29 +1,32 @@
-# 💻 Core System Programming Portfolio
-> **"상용 엔진의 블랙박스에 의존하지 않고, 로우 레벨의 동작 원리를 직접 통제합니다."**
+# C++ & System Programming Portfolio
 
-안녕하세요. C++의 강력한 성능과 운영체제의 하부 구조를 깊이 탐구하는 예비 게임 플레이 프로그래머입니다. 
-이 저장소는 편리한 프레임워크나 상용 게임 엔진에 기대지 않고, **C++ STL, POSIX API, 소켓 통신 등을 활용해 바닥부터 직접 구현하며 겪은 트러블슈팅과 최적화의 기록**입니다.
+C++ 및 시스템 프로그래밍(Linux/Windows) 역량 향상을 위해 진행한 프로젝트들의 소스 코드 저장소입니다. 상용 엔진의 기능에 의존하기보다, 언어의 표준 기능(STL)과 OS 레벨의 API를 직접 사용하여 프로그램의 동작 원리를 파악하는 것에 중점을 두었습니다.
 
-## 🛠 Tech Stack
-- **Language:** C++ (C++11/14/17), C
-- **OS & Environment:** VMWare Ubuntu (Linux), Windows
-- **System & Network:** POSIX API (pthreads, IPC), Winsock API
-- **Tools:** Vim, MSYS2 MinGW64, Code::Blocks, Git
+## 📂 Project List
+
+### 1. tetris_ncurses (C++ / Ncurses)
+* **내용:** 터미널 환경에서 작동하는 테트리스 게임
+* **주요 포인트:**
+  * `std::chrono`를 활용한 델타 타임 기반의 게임 루프 구현
+  * `std::remove_if`와 람다를 활용한 Erase-Remove 관용구 적용 (컨테이너 인덱스 무효화 해결)
+
+### 2. unix_system (C / POSIX API)
+* **내용:** 리눅스 환경에서의 시스템 프로그래밍 학습 기록
+* **주요 포인트:**
+  * `pthread`와 Mutex를 이용한 멀티스레드 동기화 제어
+  * `mmap` 및 Semaphore를 활용한 프로세스 간 통신(IPC) 구현
+
+### 3. winsock_gomoku (C++ / Winsock API)
+* **내용:** TCP/IP 소켓 통신 기반의 네트워크 오목 게임
+* **주요 포인트:**
+  * Winsock API를 활용한 클라이언트-서버 구조 설계
+  * 네트워크 바이트 오더링(`htonl`, `ntohl`) 처리를 통한 데이터 직렬화
+
+### 4. db_manager (C++ / PostgreSQL)
+* **내용:** `libpqxx`를 이용한 C++와 데이터베이스 연동 프로젝트
+* **주요 포인트:**
+  * RAII 패턴을 적용하여 트랜잭션의 안전한 시작과 종료 관리
+  * 예외 상황 발생 시 객체 소멸자를 통한 자동 롤백 구현
 
 ---
-
-## 📂 Core Projects & Troubleshooting
-
-### 1. [C++] Tetris with Ncurses & STL (자체 게임 루프 구현)
-**📌 핵심 요약:** `ncurses`를 이용한 렌더링 최적화 및 C++ STL을 활용한 중력 로직 버그 해결
-- **문제:** 라인 삭제 시 `std::vector`의 순회 중 요소 삭제로 인한 **인덱스 무효화(Iterator Invalidation)** 발생.
-- **해결 및 최적화:** - `std::remove_if`와 `erase`를 결합한 **Erase-Remove 관용구**를 적용하여 메모리 레벨에서 안전하게 삭제.
-  - 내부 조건자로 람다(Lambda)를 활용하여 줄 검사와 점수 갱신, 속도 증가를 단일 파이프라인으로 통합.
-  - 람다 캡처 시 불필요한 구조체 복사를 방지하기 위해 캡처 리스트를 비워(`[]`) 오버헤드 최적화.
-
-```cpp
-// 💡 핵심 로직: Erase-Remove 관용구와 람다를 활용한 최적화
-auto removed = std::remove_if(state.board.begin(), state.board.end(), [](const auto& line) {
-    return std::all_of(line.begin(), line.end(), [](const auto& cell){ return cell == '#'; });
-});
-// 이후 로직에서 state 점수 갱신 및 빈 라인 최상단 insert 처리
+* **개발 환경:** VMWare Ubuntu, MSYS2 MinGW64, Vim, Git
